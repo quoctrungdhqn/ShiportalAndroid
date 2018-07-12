@@ -29,7 +29,9 @@ public class RetrofitClient {
             client.addInterceptor(chain -> {
                 Request request = chain.request();
                 Request.Builder newBuilder = request.newBuilder()
-                        .addHeader("User-Agent", "Android");
+                        .addHeader("Accept", "application/json")
+                        .addHeader("User-Agent", "Android")
+                        .addHeader("Content-Type", "application/json");
 
                 // Get access_token & token_type
                 String access_token = SharedPrefs.getStringPrefs(context, "access_token");
