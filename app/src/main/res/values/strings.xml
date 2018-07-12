@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ShiportalAndroid</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="dialog_error_title">Error</string>
+    <string name="message_dialog_error">Something went wrong!</string>
+    <string name="btn_okay">Okay</string>
+</resources>
