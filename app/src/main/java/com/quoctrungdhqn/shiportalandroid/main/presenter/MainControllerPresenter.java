@@ -77,7 +77,7 @@ public class MainControllerPresenter implements MainControllerContract.Presenter
     }
 
     private void onGetUsersError(Throwable throwable) {
-        mView.showLoading();
+        mView.hideLoading();
         mView.showError(throwable.getMessage());
     }
 }

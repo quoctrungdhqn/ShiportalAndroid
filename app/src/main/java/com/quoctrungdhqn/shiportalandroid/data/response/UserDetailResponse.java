@@ -1,9 +1,12 @@
 package com.quoctrungdhqn.shiportalandroid.data.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserDetailResponse {
+public class UserDetailResponse implements Parcelable {
     @SerializedName("user_id")
     @Expose
     private String userId;
@@ -22,6 +25,27 @@ public class UserDetailResponse {
     @SerializedName("description")
     @Expose
     private String description;
+
+    private UserDetailResponse(Parcel in) {
+        userId = in.readString();
+        businessName = in.readString();
+        lastName = in.readString();
+        mobile = in.readString();
+        email = in.readString();
+        description = in.readString();
+    }
+
+    public static final Creator<UserDetailResponse> CREATOR = new Creator<UserDetailResponse>() {
+        @Override
+        public UserDetailResponse createFromParcel(Parcel in) {
+            return new UserDetailResponse(in);
+        }
+
+        @Override
+        public UserDetailResponse[] newArray(int size) {
+            return new UserDetailResponse[size];
+        }
+    };
 
     public String getUserId() {
         return userId;
@@ -69,5 +93,20 @@ public class UserDetailResponse {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userId);
+        dest.writeString(businessName);
+        dest.writeString(lastName);
+        dest.writeString(mobile);
+        dest.writeString(email);
+        dest.writeString(description);
     }
 }

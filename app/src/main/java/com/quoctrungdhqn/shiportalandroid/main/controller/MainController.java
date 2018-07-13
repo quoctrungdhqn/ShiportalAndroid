@@ -1,5 +1,6 @@
 package com.quoctrungdhqn.shiportalandroid.main.controller;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import com.quoctrungdhqn.shiportalandroid.R;
 import com.quoctrungdhqn.shiportalandroid.base.BaseController;
 import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
+import com.quoctrungdhqn.shiportalandroid.detail.UserDetailActivity;
 import com.quoctrungdhqn.shiportalandroid.main.adapter.MainAdapter;
 import com.quoctrungdhqn.shiportalandroid.main.presenter.MainControllerContract;
 import com.quoctrungdhqn.shiportalandroid.main.presenter.MainControllerPresenter;
@@ -43,9 +45,6 @@ public class MainController extends BaseController implements MainControllerCont
         ButterKnife.bind(this, view);
 
         mPresenter = new MainControllerPresenter(this, getActivity());
-
-        mUsers = new ArrayList<>();
-
         initViews();
 
         return view;
@@ -57,9 +56,17 @@ public class MainController extends BaseController implements MainControllerCont
     }
 
     private void initViews() {
+        mUsers = new ArrayList<>();
         setRecyclerViewAdapter();
         setLoadMore();
         refreshData();
+
+        mMainAdapter.setRecyclerEventHandler(user -> {
+            Intent intent = new Intent(getActivity(), UserDetailActivity.class);
+            intent.putExtra(UserDetailActivity.EXTRA_NAME, user);
+            startActivity(intent);
+        });
+
     }
 
     private void setRecyclerViewAdapter() {
@@ -103,6 +110,7 @@ public class MainController extends BaseController implements MainControllerCont
     }
 
     private void refreshData() {
+        // Fetch users page = 1
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent);
         mSwipeRefresh.setOnRefreshListener(this::setLoadMore);
     }
@@ -138,10 +146,12 @@ public class MainController extends BaseController implements MainControllerCont
     @Override
     public void hideLoading() {
         mSwipeRefresh.setRefreshing(false);
+        hideLoadMore();
     }
 
     @Override
     public void showError(String message) {
         Utils.showBasicDialog(getActivity(), null, message, (dialog, which) -> dialog.dismiss());
     }
+
 }

@@ -36,6 +36,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     private int mTotalItemCount = 0;
     private boolean mLoading = false;
     private OnLoadMoreListener mOnLoadMoreListener;
+    private RecyclerEventHandler recyclerEventHandler;
 
     public MainAdapter(Context context, List<UserDetailResponse> dataList, RecyclerView recyclerView) {
         mContext = context;
@@ -63,6 +64,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MainViewHolder) {
             ((MainViewHolder) holder).bindData(mDataList.get(position));
+            ((MainViewHolder) holder).itemView.setOnClickListener(v -> onUserClicked(mDataList.get(position)));
         }
     }
 
@@ -143,5 +145,17 @@ public class MainAdapter extends RecyclerView.Adapter {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public void setRecyclerEventHandler(RecyclerEventHandler recyclerEventHandler) {
+        this.recyclerEventHandler = recyclerEventHandler;
+    }
+
+    private void onUserClicked(UserDetailResponse user) {
+        recyclerEventHandler.onClickUser(user);
+    }
+
+    public interface RecyclerEventHandler {
+        void onClickUser(UserDetailResponse userDetailResponse);
     }
 }
