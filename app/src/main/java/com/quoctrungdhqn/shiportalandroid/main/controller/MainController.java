@@ -2,6 +2,7 @@ package com.quoctrungdhqn.shiportalandroid.main.controller;
 
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.quoctrungdhqn.shiportalandroid.R;
 import com.quoctrungdhqn.shiportalandroid.base.BaseController;
-import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
+import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
 import com.quoctrungdhqn.shiportalandroid.main.adapter.MainAdapter;
 import com.quoctrungdhqn.shiportalandroid.main.presenter.MainControllerContract;
 import com.quoctrungdhqn.shiportalandroid.main.presenter.MainControllerPresenter;
@@ -33,7 +34,7 @@ public class MainController extends BaseController implements MainControllerCont
     private int nextPage = 1;
     private boolean isFinalPage;
     private MainAdapter mMainAdapter;
-    private List<UserResponse.User> mUsers = null;
+    private List<UserDetailResponse> mUsers = null;
 
     @NonNull
     @Override
@@ -65,6 +66,7 @@ public class MainController extends BaseController implements MainControllerCont
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), linearLayoutManager.getOrientation()));
         mMainAdapter = new MainAdapter(getActivity(), mUsers, mRecyclerView);
         mRecyclerView.setAdapter(mMainAdapter);
 
@@ -106,7 +108,7 @@ public class MainController extends BaseController implements MainControllerCont
     }
 
     @Override
-    public void appendDataList(UserResponse userResponse, List<UserResponse.User> users, int nextPage, boolean isFinalPage) {
+    public void appendDataList(List<UserDetailResponse> users, int nextPage, boolean isFinalPage) {
         hideLoadMore();
         mSwipeRefresh.setRefreshing(false);
         this.nextPage = nextPage;

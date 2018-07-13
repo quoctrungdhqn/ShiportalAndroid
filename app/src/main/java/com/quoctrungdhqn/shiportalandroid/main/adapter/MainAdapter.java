@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.quoctrungdhqn.shiportalandroid.R;
+import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
 import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +28,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROGRESS = 0;
     private Context mContext;
-    private List<UserResponse.User> mDataList;
+    private List<UserDetailResponse> mDataList;
 
     // variable for loadmore
     private int mFirstVisibleItem = 0;
@@ -33,7 +37,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     private boolean mLoading = false;
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    public MainAdapter(Context context, List<UserResponse.User> dataList, RecyclerView recyclerView) {
+    public MainAdapter(Context context, List<UserDetailResponse> dataList, RecyclerView recyclerView) {
         this.mContext = context;
         this.mDataList = dataList;
         setupLoadMore(recyclerView);
@@ -122,8 +126,9 @@ public class MainAdapter extends RecyclerView.Adapter {
             ButterKnife.bind(this, itemView);
         }
 
-        void bindData(UserResponse.User user) {
-            tvName.setText(user.getUserId());
+        void bindData(UserDetailResponse user) {
+            tvName.setText(String.format(Locale.getDefault(), "%s %s", user.getBusinessName(), user.getLastName()));
+            tvDescription.setText(TextUtils.isEmpty(user.getDescription()) ? "" : user.getDescription());
         }
     }
 

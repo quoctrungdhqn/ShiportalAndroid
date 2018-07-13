@@ -2,7 +2,7 @@ package com.quoctrungdhqn.shiportalandroid.main.presenter;
 
 import com.quoctrungdhqn.shiportalandroid.base.BasePresenter;
 import com.quoctrungdhqn.shiportalandroid.base.BaseView;
-import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
+import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface MainControllerContract {
 
         void showError(String message);
 
-        void appendDataList(UserResponse userResponse, List<UserResponse.User> users, int nextPage, boolean isFinalPage);
+        void appendDataList(List<UserDetailResponse> users, int nextPage, boolean isFinalPage);
     }
 
     interface Presenter extends BasePresenter {

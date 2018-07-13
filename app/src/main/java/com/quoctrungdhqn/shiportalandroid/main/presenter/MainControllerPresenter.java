@@ -3,12 +3,17 @@ package com.quoctrungdhqn.shiportalandroid.main.presenter;
 import android.content.Context;
 
 import com.quoctrungdhqn.shiportalandroid.data.RetrofitClient;
+import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
 import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class MainControllerPresenter implements MainControllerContract.Presenter {
     private MainControllerContract.View mView;
@@ -36,7 +41,15 @@ public class MainControllerPresenter implements MainControllerContract.Presenter
         compositeDisposable.add(RetrofitClient.getServiceAPI(context).getUsers(page)
                 .flatMap(userResponse -> {
                     if (userResponse.isSuccessful()) {
-                        return Observable.just(userResponse.body());
+
+                        List<UserResponse.User> users = userResponse.body().getUsers();
+                        List<Observable<Response<UserDetailResponse>>> observableList = new ArrayList<>();
+
+                        for (UserResponse.User item : users) {
+                            observableList.add(RetrofitClient.getServiceAPI(context).getUserDetail(item.getUserId()));
+                        }
+
+                        return Observable.combineLatest(observableList, objects -> objects);
                     } else {
                         return Observable.error(new Exception(userResponse.errorBody().string()));
                     }
@@ -46,17 +59,21 @@ public class MainControllerPresenter implements MainControllerContract.Presenter
                 .subscribe(userResponse -> onGetUsersDataResponse(userResponse, page), this::onGetUsersError));
     }
 
-    private void onGetUsersDataResponse(UserResponse userResponse, int page) {
-        if (userResponse == null || userResponse.getUsers() == null) return;
+    private void onGetUsersDataResponse(Object[] userResponses, int page) {
+        List<UserDetailResponse> users = new ArrayList<>();
+        for (Object item : userResponses) {
+            Response<UserDetailResponse> response = (Response<UserDetailResponse>) item;
+            users.add(response.body());
+        }
 
         boolean isFinalPage = false;
-        if (userResponse.getUsers().size() >= 9) {
+        if (users.size() >= 9) {
             page++;
         } else {
             isFinalPage = true;
         }
 
-        mView.appendDataList(userResponse, userResponse.getUsers(), page, isFinalPage);
+        mView.appendDataList(users, page, isFinalPage);
     }
 
     private void onGetUsersError(Throwable throwable) {
