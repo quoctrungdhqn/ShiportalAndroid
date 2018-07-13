@@ -12,7 +12,7 @@ import com.quoctrungdhqn.shiportalandroid.data.request.LoginRequest;
 import com.quoctrungdhqn.shiportalandroid.login.presenter.LoginActivityContract;
 import com.quoctrungdhqn.shiportalandroid.login.presenter.LoginActivityPresenter;
 import com.quoctrungdhqn.shiportalandroid.main.MainActivity;
-import com.quoctrungdhqn.shiportalandroid.utils.DialogUtils;
+import com.quoctrungdhqn.shiportalandroid.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityCon
 
     private void initViews() {
         ButterKnife.bind(this);
-        mDialog = DialogUtils.getLoadingDialog(this);
+        mDialog = Utils.getLoadingDialog(this);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityCon
 
     @Override
     public void showLoginError(String message) {
-        DialogUtils.showBasicDialog(this, null, message, (dialog, which) -> dialog.dismiss());
+        Utils.showBasicDialog(this, null, message, (dialog, which) -> dialog.dismiss());
     }
 
     private boolean validateForm() {

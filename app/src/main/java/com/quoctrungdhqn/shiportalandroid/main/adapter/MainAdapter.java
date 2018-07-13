@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.quoctrungdhqn.shiportalandroid.R;
 import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
-import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
+import com.quoctrungdhqn.shiportalandroid.utils.Utils;
 
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +38,7 @@ public class MainAdapter extends RecyclerView.Adapter {
     private OnLoadMoreListener mOnLoadMoreListener;
 
     public MainAdapter(Context context, List<UserDetailResponse> dataList, RecyclerView recyclerView) {
-        this.mContext = context;
+        mContext = context;
         this.mDataList = dataList;
         setupLoadMore(recyclerView);
     }
@@ -112,7 +112,7 @@ public class MainAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public static class MainViewHolder extends RecyclerView.ViewHolder {
+    public class MainViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.avatar)
         ImageView avatar;
@@ -129,10 +129,12 @@ public class MainAdapter extends RecyclerView.Adapter {
         void bindData(UserDetailResponse user) {
             tvName.setText(String.format(Locale.getDefault(), "%s %s", user.getBusinessName(), user.getLastName()));
             tvDescription.setText(TextUtils.isEmpty(user.getDescription()) ? "" : user.getDescription());
+            String profile_pic_url = "https://secure.gravatar.com/avatar/" + Utils.md5Hex(user.getEmail());
+            Glide.with(mContext).load(profile_pic_url).into(avatar);
         }
     }
 
-    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+    public class ProgressViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.progressBar)
         ProgressBar progressBar;

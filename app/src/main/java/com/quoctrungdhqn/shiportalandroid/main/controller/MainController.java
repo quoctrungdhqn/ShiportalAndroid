@@ -15,7 +15,7 @@ import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
 import com.quoctrungdhqn.shiportalandroid.main.adapter.MainAdapter;
 import com.quoctrungdhqn.shiportalandroid.main.presenter.MainControllerContract;
 import com.quoctrungdhqn.shiportalandroid.main.presenter.MainControllerPresenter;
-import com.quoctrungdhqn.shiportalandroid.utils.DialogUtils;
+import com.quoctrungdhqn.shiportalandroid.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,6 +142,6 @@ public class MainController extends BaseController implements MainControllerCont
 
     @Override
     public void showError(String message) {
-        DialogUtils.showBasicDialog(getActivity(), null, message, (dialog, which) -> dialog.dismiss());
+        Utils.showBasicDialog(getActivity(), null, message, (dialog, which) -> dialog.dismiss());
     }
 }
