@@ -8,27 +8,27 @@ import java.util.List;
 public class UserResponse {
     @SerializedName("rowCount")
     @Expose
-    private Integer rowCount;
+    private int rowCount;
     @SerializedName("totalRowCount")
     @Expose
-    private Integer totalRowCount;
+    private int totalRowCount;
     @SerializedName("users")
     @Expose
     private List<User> users = null;
 
-    public Integer getRowCount() {
+    public int getRowCount() {
         return rowCount;
     }
 
-    public void setRowCount(Integer rowCount) {
+    public void setRowCount(int rowCount) {
         this.rowCount = rowCount;
     }
 
-    public Integer getTotalRowCount() {
+    public int getTotalRowCount() {
         return totalRowCount;
     }
 
-    public void setTotalRowCount(Integer totalRowCount) {
+    public void setTotalRowCount(int totalRowCount) {
         this.totalRowCount = totalRowCount;
     }
 

@@ -5,10 +5,10 @@ import android.content.Context;
 import com.quoctrungdhqn.shiportalandroid.data.RetrofitClient;
 import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Response;
 
 public class MainControllerPresenter implements MainControllerContract.Presenter {
     private MainControllerContract.View mView;
@@ -34,27 +34,33 @@ public class MainControllerPresenter implements MainControllerContract.Presenter
     @Override
     public void getUserList(int page) {
         compositeDisposable.add(RetrofitClient.getServiceAPI(context).getUsers(page)
+                .flatMap(userResponse -> {
+                    if (userResponse.isSuccessful()) {
+                        return Observable.just(userResponse.body());
+                    } else {
+                        return Observable.error(new Exception(userResponse.errorBody().string()));
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userResponse -> onGetUsersDataResponse(userResponse, page), this::onGetUsersError));
     }
 
-    private void onGetUsersDataResponse(Response<UserResponse> userResponse, int page) {
-        if (userResponse == null || userResponse.body() == null) return;
-        UserResponse response = userResponse.body();
-        if (response != null && response.getUsers() != null) {
-            boolean isFinalPage = false;
-            if (response.getUsers().size() >= 9) {
-                page++;
-            } else {
-                isFinalPage = true;
-            }
+    private void onGetUsersDataResponse(UserResponse userResponse, int page) {
+        if (userResponse == null || userResponse.getUsers() == null) return;
 
-            mView.appendDataList(response, response.getUsers(), page, isFinalPage);
+        boolean isFinalPage = false;
+        if (userResponse.getUsers().size() >= 9) {
+            page++;
+        } else {
+            isFinalPage = true;
         }
+
+        mView.appendDataList(userResponse, userResponse.getUsers(), page, isFinalPage);
     }
 
     private void onGetUsersError(Throwable throwable) {
         mView.showLoading();
+        mView.showError(throwable.getMessage());
     }
 }
