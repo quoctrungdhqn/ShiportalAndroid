@@ -7,8 +7,8 @@ import com.quoctrungdhqn.shiportalandroid.BuildConfig;
 import com.quoctrungdhqn.shiportalandroid.utils.SharedPrefs;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
-import okhttp3.CacheControl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -35,13 +35,19 @@ public class RetrofitClient {
 
                 // Get access_token & token_type
                 String access_token = SharedPrefs.getStringPrefs(context, "access_token");
-                String token_type = SharedPrefs.getStringPrefs(context, "token_type");
-                if (!TextUtils.isEmpty(access_token) && !TextUtils.isEmpty(token_type)) {
-                    String header = String.format(Locale.getDefault(), "%s %s", token_type, access_token);
-                    newBuilder.cacheControl(CacheControl.FORCE_NETWORK).addHeader("Authorization", header);
+
+                if (!TextUtils.isEmpty(access_token)) {
+                    String header = String.format(Locale.getDefault(), "Bearer %s", access_token);
+                    newBuilder.addHeader("Authorization", header);
                 }
                 return chain.proceed(newBuilder.build());
-            });
+            })
+                    .addInterceptor(new RefreshingOAuthToken(context))
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
+                    .build();
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BuildConfig.HOST)

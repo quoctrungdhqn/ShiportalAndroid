@@ -6,9 +6,16 @@ import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
 
 import java.util.List;
 
-public interface MainActivityContract {
+public interface MainControllerContract {
 
     interface View extends BaseView<Presenter> {
+
+        void showLoading();
+
+        void hideLoading();
+
+        void showError(String message);
+
         void appendDataList(UserResponse userResponse, List<UserResponse.User> users, int nextPage, boolean isFinalPage);
     }
 

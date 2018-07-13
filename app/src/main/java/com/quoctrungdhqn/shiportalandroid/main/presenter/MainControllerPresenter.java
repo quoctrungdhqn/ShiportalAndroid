@@ -10,12 +10,12 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
-public class MainActivityPresenter implements MainActivityContract.Presenter {
-    private MainActivityContract.View mView;
+public class MainControllerPresenter implements MainControllerContract.Presenter {
+    private MainControllerContract.View mView;
     private CompositeDisposable compositeDisposable;
     private Context context;
 
-    public MainActivityPresenter(MainActivityContract.View view, Context context) {
+    public MainControllerPresenter(MainControllerContract.View view, Context context) {
         mView = view;
         compositeDisposable = new CompositeDisposable();
         this.context = context;
@@ -55,5 +55,6 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     private void onGetUsersError(Throwable throwable) {
+        mView.showLoading();
     }
 }

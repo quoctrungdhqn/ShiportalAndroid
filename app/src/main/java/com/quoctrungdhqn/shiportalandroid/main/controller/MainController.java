@@ -12,8 +12,9 @@ import com.quoctrungdhqn.shiportalandroid.R;
 import com.quoctrungdhqn.shiportalandroid.base.BaseController;
 import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
 import com.quoctrungdhqn.shiportalandroid.main.adapter.MainAdapter;
-import com.quoctrungdhqn.shiportalandroid.main.presenter.MainActivityContract;
-import com.quoctrungdhqn.shiportalandroid.main.presenter.MainActivityPresenter;
+import com.quoctrungdhqn.shiportalandroid.main.presenter.MainControllerContract;
+import com.quoctrungdhqn.shiportalandroid.main.presenter.MainControllerPresenter;
+import com.quoctrungdhqn.shiportalandroid.utils.DialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +22,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainController extends BaseController implements MainActivityContract.View {
+public class MainController extends BaseController implements MainControllerContract.View {
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefresh;
 
-    private MainActivityContract.Presenter mPresenter;
+    private MainControllerContract.Presenter mPresenter;
     private int nextPage = 1;
     private boolean isFinalPage;
     private MainAdapter mMainAdapter;
@@ -40,7 +41,7 @@ public class MainController extends BaseController implements MainActivityContra
         View view = inflater.inflate(R.layout.controller_home, container, false);
         ButterKnife.bind(this, view);
 
-        mPresenter = new MainActivityPresenter(this, getActivity());
+        mPresenter = new MainControllerPresenter(this, getActivity());
 
         mUsers = new ArrayList<>();
 
@@ -87,6 +88,7 @@ public class MainController extends BaseController implements MainActivityContra
         mMainAdapter.setLoadMore(!isFinalPage);
         if (!isFinalPage) {
             isFinalPage = true;
+            showLoading();
             mPresenter.getUserList(this.nextPage);
         }
     }
@@ -122,7 +124,22 @@ public class MainController extends BaseController implements MainActivityContra
     }
 
     @Override
-    public void setPresenter(MainActivityContract.Presenter presenter) {
+    public void setPresenter(MainControllerContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void showLoading() {
+        mSwipeRefresh.setRefreshing(true);
+    }
+
+    @Override
+    public void hideLoading() {
+        mSwipeRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void showError(String message) {
+        DialogUtils.showBasicDialog(getActivity(), null, message, (dialog, which) -> dialog.dismiss());
     }
 }
