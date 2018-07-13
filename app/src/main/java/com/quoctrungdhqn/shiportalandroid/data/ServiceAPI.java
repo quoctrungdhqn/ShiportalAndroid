@@ -4,6 +4,7 @@ import com.quoctrungdhqn.shiportalandroid.data.request.LoginRequest;
 import com.quoctrungdhqn.shiportalandroid.data.request.RefreshTokenRequest;
 import com.quoctrungdhqn.shiportalandroid.data.response.LoginResponse;
 import com.quoctrungdhqn.shiportalandroid.data.response.RefreshTokenResponse;
+import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
 import com.quoctrungdhqn.shiportalandroid.data.response.UserResponse;
 
 import io.reactivex.Flowable;
@@ -13,6 +14,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ServiceAPI {
@@ -24,4 +26,7 @@ public interface ServiceAPI {
 
     @GET("/user")
     Observable<Response<UserResponse>> getUsers(@Query("page") int page);
+
+    @GET("/user/{id}")
+    Observable<Response<UserDetailResponse>> getUserDetail(@Path("id") String id);
 }
