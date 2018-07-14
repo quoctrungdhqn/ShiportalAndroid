@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bluelinelabs.conductor.Controller;
 import com.quoctrungdhqn.shiportalandroid.R;
-import com.quoctrungdhqn.shiportalandroid.base.BaseController;
 import com.quoctrungdhqn.shiportalandroid.data.response.UserDetailResponse;
 import com.quoctrungdhqn.shiportalandroid.detail.UserDetailActivity;
 import com.quoctrungdhqn.shiportalandroid.main.adapter.MainAdapter;
@@ -25,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainController extends BaseController implements MainControllerContract.View {
+public class MainController extends Controller implements MainControllerContract.View {
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
