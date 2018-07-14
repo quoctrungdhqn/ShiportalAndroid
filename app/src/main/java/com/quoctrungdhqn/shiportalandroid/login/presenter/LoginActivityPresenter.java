@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.quoctrungdhqn.shiportalandroid.data.RetrofitClient;
 import com.quoctrungdhqn.shiportalandroid.data.request.LoginRequest;
-import com.quoctrungdhqn.shiportalandroid.data.response.LoginResponse;
 import com.quoctrungdhqn.shiportalandroid.utils.SharedPrefs;
 
 import io.reactivex.Observable;
@@ -14,7 +13,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivityPresenter implements LoginActivityContract.Presenter {
     private LoginActivityContract.View mView;
-    private CompositeDisposable compositeDisposable = null;
+    private CompositeDisposable compositeDisposable;
     private Context context;
 
     public LoginActivityPresenter(LoginActivityContract.View view, Context context) {

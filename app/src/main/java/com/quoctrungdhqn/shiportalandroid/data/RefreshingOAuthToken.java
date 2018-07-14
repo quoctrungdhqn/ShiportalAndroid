@@ -96,8 +96,13 @@ public class RefreshingOAuthToken implements Interceptor {
                                 accessToken = response.getAccessToken();
                                 Log.d("Token api", accessToken);
                                 SharedPrefs.setStringPrefs(context, "access_token", response.getAccessToken());
-                            }, throwable -> Log.d(TAG, throwable.getMessage())));
+                                compositeDisposable.clear();
+                            }, throwable -> {
+                                Log.d(TAG, throwable.getMessage());
+                                compositeDisposable.clear();
+                            }));
                 } catch (Exception e) {
+                    compositeDisposable.clear();
                     e.printStackTrace();
                     isRefresh = false;
                 }
