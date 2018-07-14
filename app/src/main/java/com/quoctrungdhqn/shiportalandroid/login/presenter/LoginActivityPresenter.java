@@ -13,13 +13,13 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivityPresenter implements LoginActivityContract.Presenter {
     private LoginActivityContract.View mView;
-    private CompositeDisposable compositeDisposable;
-    private Context context;
+    private CompositeDisposable mCompositeDisposable;
+    private Context mContext;
 
     public LoginActivityPresenter(LoginActivityContract.View view, Context context) {
         mView = view;
-        this.context = context;
-        compositeDisposable = new CompositeDisposable();
+        mContext = context;
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -29,13 +29,16 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
 
     @Override
     public void onStop() {
-        compositeDisposable.clear();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable = null;
+        }
     }
 
     @Override
     public void doLogin(LoginRequest loginRequest) {
         mView.showLoading();
-        compositeDisposable.add(RetrofitClient.getServiceAPI(context).login(loginRequest)
+        mCompositeDisposable.add(RetrofitClient.getServiceAPI(mContext).login(loginRequest)
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
                         return Observable.just(response.body());
@@ -48,8 +51,8 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
                 .subscribe(response -> {
                     mView.hideLoading();
                     if (response == null) return;
-                    SharedPrefs.setStringPrefs(context, "access_token", response.getAccessToken());
-                    SharedPrefs.setStringPrefs(context, "refresh_token", response.getRefreshToken());
+                    SharedPrefs.setStringPrefs(mContext, "access_token", response.getAccessToken());
+                    SharedPrefs.setStringPrefs(mContext, "refresh_token", response.getRefreshToken());
                     mView.showLoginSuccess();
                 }, throwable -> {
                     mView.hideLoading();

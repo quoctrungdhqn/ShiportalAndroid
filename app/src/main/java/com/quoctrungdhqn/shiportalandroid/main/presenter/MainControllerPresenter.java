@@ -19,13 +19,13 @@ import retrofit2.Response;
 
 public class MainControllerPresenter implements MainControllerContract.Presenter {
     private MainControllerContract.View mView;
-    private CompositeDisposable compositeDisposable;
-    private Context context;
+    private CompositeDisposable mCompositeDisposable;
+    private Context mContext;
 
     public MainControllerPresenter(MainControllerContract.View view, Context context) {
         mView = view;
-        compositeDisposable = new CompositeDisposable();
-        this.context = context;
+        mCompositeDisposable = new CompositeDisposable();
+        mContext = context;
     }
 
     @Override
@@ -35,12 +35,16 @@ public class MainControllerPresenter implements MainControllerContract.Presenter
 
     @Override
     public void onStop() {
-        compositeDisposable.clear();
+        // Dispose
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable = null;
+        }
     }
 
     @Override
     public void getUserList(int page) {
-        compositeDisposable.add(RetrofitClient.getServiceAPI(context).getUsers(page)
+        mCompositeDisposable.add(RetrofitClient.getServiceAPI(mContext).getUsers(page)
                 .flatMap(userResponse -> {
                     if (userResponse.isSuccessful()) {
 
@@ -60,7 +64,7 @@ public class MainControllerPresenter implements MainControllerContract.Presenter
 
                             @Override
                             public void onNext(UserResponse.User user) {
-                                observableList.add(RetrofitClient.getServiceAPI(context).getUserDetail(user.getUserId()));
+                                observableList.add(RetrofitClient.getServiceAPI(mContext).getUserDetail(user.getUserId()));
                             }
 
                             @Override

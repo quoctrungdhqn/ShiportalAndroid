@@ -20,12 +20,12 @@ public class RefreshingOAuthToken implements Interceptor {
     private boolean isRefresh = false;
     private String refreshToken = null;
     private Context context;
-    private CompositeDisposable compositeDisposable;
+    private CompositeDisposable mCompositeDisposable;
     private String accessToken;
 
     RefreshingOAuthToken(Context context) {
         this.context = context;
-        compositeDisposable = new CompositeDisposable();
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class RefreshingOAuthToken implements Interceptor {
                         refreshToken);
                 try {
                     isRefresh = false;
-                    compositeDisposable.add(RetrofitClient.getServiceAPI(context).refreshToken(tokenRequest)
+                    mCompositeDisposable.add(RetrofitClient.getServiceAPI(context).refreshToken(tokenRequest)
                             .flatMap(response -> {
                                 if (response.isSuccessful()) {
                                     return Single.just(response.body());
@@ -96,13 +96,26 @@ public class RefreshingOAuthToken implements Interceptor {
                                 accessToken = response.getAccessToken();
                                 Log.d("Token api", accessToken);
                                 SharedPrefs.setStringPrefs(context, "access_token", response.getAccessToken());
-                                compositeDisposable.clear();
+
+                                // Dispose
+                                if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+                                    mCompositeDisposable.dispose();
+                                    mCompositeDisposable = null;
+                                }
                             }, throwable -> {
                                 Log.d(TAG, throwable.getMessage());
-                                compositeDisposable.clear();
+                                // Dispose
+                                if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+                                    mCompositeDisposable.dispose();
+                                    mCompositeDisposable = null;
+                                }
                             }));
                 } catch (Exception e) {
-                    compositeDisposable.clear();
+                    // Dispose
+                    if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+                        mCompositeDisposable.dispose();
+                        mCompositeDisposable = null;
+                    }
                     e.printStackTrace();
                     isRefresh = false;
                 }
