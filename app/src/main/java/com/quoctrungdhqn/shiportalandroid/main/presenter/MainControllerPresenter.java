@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
@@ -45,9 +47,32 @@ public class MainControllerPresenter implements MainControllerContract.Presenter
                         List<UserResponse.User> users = userResponse.body().getUsers();
                         List<Observable<Response<UserDetailResponse>>> observableList = new ArrayList<>();
 
-                        for (UserResponse.User item : users) {
+                        /*for (UserResponse.User item : users) {
                             observableList.add(RetrofitClient.getServiceAPI(context).getUserDetail(item.getUserId()));
-                        }
+                        }*/
+
+                        Observable<UserResponse.User> observable = Observable.fromIterable(users);
+                        observable.subscribe(new Observer<UserResponse.User>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(UserResponse.User user) {
+                                observableList.add(RetrofitClient.getServiceAPI(context).getUserDetail(user.getUserId()));
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
 
                         return Observable.combineLatest(observableList, objects -> objects);
                     } else {
