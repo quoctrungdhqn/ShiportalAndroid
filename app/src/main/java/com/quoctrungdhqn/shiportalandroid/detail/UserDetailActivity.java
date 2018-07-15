@@ -58,20 +58,38 @@ public class UserDetailActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Get data from intent
-        Intent intent = getIntent();
-        UserDetailResponse user = intent.getParcelableExtra(EXTRA_NAME);
+        String name;
+        String profile_pic_url;
+        UserDetailResponse user;
 
-        String name = String.format(Locale.getDefault(), "%s %s", user.getBusinessName(), user.getLastName());
-        collapsingToolbarLayout.setTitle(name);
+        if (savedInstanceState != null) {
+            user = savedInstanceState.getParcelable("USER_DETAIL");
 
-        tvFullName.setText(name);
-        tvMobilePhone.setText(TextUtils.isEmpty(user.getMobile()) ? "" : user.getMobile());
-        tvEmail.setText(TextUtils.isEmpty(user.getEmail()) ? "" : user.getEmail());
-        tvDescription.setText(TextUtils.isEmpty(user.getDescription()) ? "" : user.getDescription());
-        String profile_pic_url = "https://secure.gravatar.com/avatar/" + Utils.md5Hex(user.getEmail());
-        Glide.with(this).load(profile_pic_url).into(imageAvatar);
+            name = String.format(Locale.getDefault(), "%s %s", user.getBusinessName(), user.getLastName());
+            collapsingToolbarLayout.setTitle(name);
 
+            tvFullName.setText(name);
+            tvMobilePhone.setText(TextUtils.isEmpty(user.getMobile()) ? "" : user.getMobile());
+            tvEmail.setText(TextUtils.isEmpty(user.getEmail()) ? "" : user.getEmail());
+            tvDescription.setText(TextUtils.isEmpty(user.getDescription()) ? "" : user.getDescription());
+            profile_pic_url = "https://secure.gravatar.com/avatar/" + Utils.md5Hex(user.getEmail());
+            Glide.with(this).load(profile_pic_url).into(imageAvatar);
+
+        } else {
+            // Get data from intent
+            Intent intent = getIntent();
+            user = intent.getParcelableExtra(EXTRA_NAME);
+
+            name = String.format(Locale.getDefault(), "%s %s", user.getBusinessName(), user.getLastName());
+            collapsingToolbarLayout.setTitle(name);
+
+            tvFullName.setText(name);
+            tvMobilePhone.setText(TextUtils.isEmpty(user.getMobile()) ? "" : user.getMobile());
+            tvEmail.setText(TextUtils.isEmpty(user.getEmail()) ? "" : user.getEmail());
+            tvDescription.setText(TextUtils.isEmpty(user.getDescription()) ? "" : user.getDescription());
+            profile_pic_url = "https://secure.gravatar.com/avatar/" + Utils.md5Hex(user.getEmail());
+            Glide.with(this).load(profile_pic_url).into(imageAvatar);
+        }
     }
 
     @Override
@@ -88,5 +106,11 @@ public class UserDetailActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("USER_DETAIL", getIntent().getParcelableExtra(EXTRA_NAME));
     }
 }
