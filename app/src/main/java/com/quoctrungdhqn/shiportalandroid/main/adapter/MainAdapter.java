@@ -114,6 +114,10 @@ public class MainAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public List<UserDetailResponse> getUsers() {
+        return mDataList;
+    }
+
     public class MainViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.avatar)

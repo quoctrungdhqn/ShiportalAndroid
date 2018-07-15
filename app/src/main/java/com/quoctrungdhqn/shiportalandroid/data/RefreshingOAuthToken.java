@@ -111,8 +111,13 @@ public class RefreshingOAuthToken implements Interceptor {
                                 }
                             }));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // Dispose
+                    if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+                        mCompositeDisposable.dispose();
+                        mCompositeDisposable = null;
+                    }
                     isRefresh = false;
+                    e.printStackTrace();
                 }
             }
         }
