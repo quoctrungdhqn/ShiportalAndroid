@@ -51,6 +51,8 @@ public class LoginActivityPresenter implements LoginActivityContract.Presenter {
                 .subscribe(response -> {
                     mView.hideLoading();
                     if (response == null) return;
+
+                    // Save access_token & refresh_token for future
                     SharedPrefs.setStringPrefs(mContext, "access_token", response.getAccessToken());
                     SharedPrefs.setStringPrefs(mContext, "refresh_token", response.getRefreshToken());
                     mView.showLoginSuccess();

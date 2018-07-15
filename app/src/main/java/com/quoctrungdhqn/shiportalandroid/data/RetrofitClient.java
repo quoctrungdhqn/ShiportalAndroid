@@ -42,7 +42,7 @@ public class RetrofitClient {
                 }
                 return chain.proceed(newBuilder.build());
             })
-                    .addInterceptor(new RefreshingOAuthToken(context))
+                    .addInterceptor(new RefreshingOAuthToken(context)) // Refresh token
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
