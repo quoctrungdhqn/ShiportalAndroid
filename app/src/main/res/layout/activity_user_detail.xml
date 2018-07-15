@@ -67,7 +67,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@android:drawable/star_big_off"
+        android:src="@drawable/ic_star"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|right|end" />
 
