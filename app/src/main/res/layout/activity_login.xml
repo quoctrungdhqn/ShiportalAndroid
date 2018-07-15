@@ -24,7 +24,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
                 android:inputType="textEmailAddress"
-                android:text="quoctrungdhqn@gmail.com"
                 android:textColor="@color/colorBlack" />
 
         </android.support.design.widget.TextInputLayout>
@@ -40,7 +39,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:text="password"
                 android:textColor="@color/colorBlack" />
 
         </android.support.design.widget.TextInputLayout>

@@ -18,8 +18,10 @@ import com.quoctrungdhqn.shiportalandroid.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class LoginActivity extends BaseActivity implements LoginActivityContract.View {
+    private Unbinder unbinder;
 
     @BindView(R.id.et_username)
     EditText etUsername;
@@ -36,11 +38,14 @@ public class LoginActivity extends BaseActivity implements LoginActivityContract
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initViews();
-
+        if (savedInstanceState != null) {
+            etUsername.setText(savedInstanceState.getString("USERNAME"));
+            etPassword.setText(savedInstanceState.getString("PASSWORD"));
+        }
     }
 
     private void initViews() {
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         mDialog = Utils.getLoadingDialog(this);
         mPresenter = new LoginActivityPresenter(this, this);
     }
@@ -96,6 +101,19 @@ public class LoginActivity extends BaseActivity implements LoginActivityContract
     @Override
     public void hideLoading() {
         mDialog.dismiss();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("USERNAME", etUsername.getText().toString());
+        outState.putString("PASSWORD", etPassword.getText().toString());
     }
 
 }

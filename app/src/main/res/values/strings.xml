@@ -6,4 +6,6 @@
     <string name="dialog_error_title">Error</string>
     <string name="message_dialog_error">Something went wrong!</string>
     <string name="btn_okay">Okay</string>
+    <string name="username_value">quoctrungdhqn@gmail.com</string>
+    <string name="password_value">password</string>
 </resources>
